@@ -8,7 +8,6 @@ module.exports = {
     users: async () => {
 
         try {
-            User.testMethod();
             const users = await User.find();
             return users.map(user => parseUser(user));
         } catch (err) {
