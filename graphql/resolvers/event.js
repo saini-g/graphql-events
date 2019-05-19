@@ -18,7 +18,11 @@ module.exports = {
             throw err;
         }
     },
-    createEvent: async args => {
+    createEvent: async (args, req) => {
+
+        if (!req.isAuth) {
+            throw new Error('auth failed!');
+        }
 
         try {
             const newEvent = new Event({
@@ -26,12 +30,12 @@ module.exports = {
                 description: args.evInput.description,
                 price: +args.evInput.price,
                 date: new Date(args.evInput.date),
-                created_by: '5cb324a9ca1ab019880cb790'
+                created_by: req.userId
             });
             // this approach is for handling operations on multiple objects
             // can be replaced by transactions
             const saveResult = await newEvent.save();
-            const user = await User.findById('5cb324a9ca1ab019880cb790');
+            const user = await User.findById(req.userId);
             user.created_events.push(newEvent);
             await user.save();
             return parseEvent(saveResult);;

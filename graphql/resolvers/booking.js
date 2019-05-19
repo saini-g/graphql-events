@@ -3,7 +3,11 @@ const Booking = require('../../models/booking');
 const { parseBooking } = require('./helper');
 
 module.exports = {
-    bookings: async () => {
+    bookings: async (args, req) => {
+
+        if (!req.isAuth) {
+            throw new Error('auth failed!');
+        }
 
         try {
             const bookings = await Booking.find();
@@ -12,7 +16,11 @@ module.exports = {
             throw err;
         }
     },
-    bookEvent: async args => {
+    bookEvent: async (args, req) => {
+
+        if (!req.isAuth) {
+            throw new Error('auth failed!');
+        }
 
         try {
             const event = await Event.findById(args.eventId);
@@ -21,7 +29,7 @@ module.exports = {
                 throw new Error('event not found!');
             }
             const newBooking = new Booking({
-                user: '5cb324a9ca1ab019880cb790',
+                user: req.userId,
                 event: event
             });
             const result = await newBooking.save();
@@ -30,7 +38,11 @@ module.exports = {
             throw err;
         }
     },
-    cancelBooking: async args => {
+    cancelBooking: async (args, req) => {
+
+        if (!req.isAuth) {
+            throw new Error('auth failed!');
+        }
 
         try {
             const booking = await Booking.findById(args.bookingId);
