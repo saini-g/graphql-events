@@ -11,6 +11,17 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 app.use(authMiddleware);
 
 app.use('/graphql', expressGraphql({
@@ -25,6 +36,6 @@ mongoose.set('useFindAndModify', false);
 mongoose.connect('mongodb+srv://gaurav-saini:gaurav-saini@slackedge-test-skasp.mongodb.net/graphql-demo?retryWrites=true')
     .then(() => {
         console.log('mongo db connected...');
-        app.listen(3000, () => console.log('server started...'));
+        app.listen(8000, () => console.log('server started...'));
     })
     .catch(err => console.log(err));
