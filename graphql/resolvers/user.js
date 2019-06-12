@@ -44,7 +44,7 @@ module.exports = {
         if (!isPasswordCorrect) {
             throw new Error('invalid credentials!');
         }
-        const token = jwt.sign({ userId: user.distinct, email: user.email }, 'my-private-key', { expiresIn: '2h' });
+        const token = jwt.sign({ userId: user.id, email: user.email }, 'my-private-key', { expiresIn: '2h' });
         return {
             userId: user.id,
             token: token,
